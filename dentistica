@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dentística - Preparo Cavitário & Amálgama</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2C5F7F;
+            --secondary: #E63946;
+            --accent: #06A77D;
+            --bg: #FAFBFC;
+            --surface: #FFFFFF;
+            --text: #1A2332;
+            --text-muted: #6B7280;
+            --border: #E5E7EB;
+            --shadow: rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, #1e4259 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><path d="M10 10h80v80h-80z" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></svg>');
+            opacity: 0.3;
+        }
+
+        .header h1 {
+            font-family: 'Crimson Pro', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            background: var(--surface);
+            padding: 1rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .tab-btn {
+            flex: 1;
+            min-width: 150px;
+            padding: 0.875rem 1.5rem;
+            border: 2px solid var(--border);
+            background: var(--surface);
+            color: var(--text);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(44, 95, 127, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .tab-btn:hover::before {
+            left: 100%;
+        }
+
+        .tab-btn:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px var(--shadow);
+        }
+
+        .card h2 {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.75rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--accent);
+            padding-left: 1rem;
+        }
+
+        .card h3 {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.35rem;
+            color: var(--primary);
+            margin: 1.5rem 0 1rem;
+        }
+
+        .flashcard-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .flashcard {
+            perspective: 1000px;
+            height: 250px;
+            cursor: pointer;
+        }
+
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front,
+        .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+            font-weight: 500;
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .flashcard-front {
+            background: linear-gradient(135deg, var(--primary), #1e4259);
+            color: white;
+            font-size: 1.1rem;
+        }
+
+        .flashcard-back {
+            background: var(--surface);
+            color: var(--text);
+            transform: rotateY(180deg);
+            border: 2px solid var(--border);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .quiz-question {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--accent);
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .quiz-question h4 {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            color: var(--text);
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .quiz-option {
+            padding: 1rem 1.5rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--surface);
+        }
+
+        .quiz-option:hover {
+            border-color: var(--primary);
+            background: rgba(44, 95, 127, 0.05);
+            transform: translateX(4px);
+        }
+
+        .quiz-option.correct {
+            background: rgba(6, 167, 125, 0.1);
+            border-color: var(--accent);
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        .quiz-option.incorrect {
+            background: rgba(230, 57, 70, 0.1);
+            border-color: var(--secondary);
+            color: var(--secondary);
+            opacity: 0.6;
+        }
+
+        .quiz-score {
+            background: linear-gradient(135deg, var(--accent), #058c6a);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            box-shadow: 0 4px 12px rgba(6, 167, 125, 0.3);
+        }
+
+        .step-list {
+            counter-reset: step-counter;
+            list-style: none;
+        }
+
+        .step-list li {
+            counter-increment: step-counter;
+            padding: 1.25rem 1.5rem 1.25rem 4rem;
+            margin-bottom: 1rem;
+            background: var(--surface);
+            border-radius: 8px;
+            position: relative;
+            border-left: 3px solid var(--accent);
+            transition: all 0.3s ease;
+        }
+
+        .step-list li:hover {
+            background: rgba(44, 95, 127, 0.03);
+            transform: translateX(4px);
+        }
+
+        .step-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 2rem;
+            height: 2rem;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .classification-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .class-item {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border-top: 4px solid var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .class-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px var(--shadow);
+        }
+
+        .class-item h4 {
+            color: var(--primary);
+            font-size: 1.4rem;
+            margin-bottom: 0.75rem;
+            font-weight: 700;
+        }
+
+        .class-item p {
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, rgba(6, 167, 125, 0.2) 0%, rgba(6, 167, 125, 0.05) 100%);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 500;
+            color: var(--primary);
+        }
+
+        .important-box {
+            background: rgba(230, 57, 70, 0.05);
+            border-left: 4px solid var(--secondary);
+            padding: 1.25rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+
+        .important-box strong {
+            color: var(--secondary);
+        }
+
+        .tip-box {
+            background: rgba(6, 167, 125, 0.05);
+            border-left: 4px solid var(--accent);
+            padding: 1.25rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+
+        .tip-box strong {
+            color: var(--accent);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .nav-tabs {
+                flex-direction: column;
+            }
+
+            .tab-btn {
+                min-width: 100%;
+            }
+
+            .flashcard-container {
+                grid-template-columns: 1fr;
+            }
+
+            .classification-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            margin-top: 3rem;
+            font-size: 0.9rem;
+        }
+
+        .reset-quiz {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.875rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 1rem;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .reset-quiz:hover {
+            background: #1e4259;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🦷 Dentística Restauradora</h1>
+        <p>Guia de Estudos: Preparo Cavitário & Restauração em Amálgama</p>
+    </div>
+
+    <div class="container">
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="openTab('conceitos')">📚 Conceitos Básicos</button>
+            <button class="tab-btn" onclick="openTab('flashcards')">🎴 Flashcards</button>
+            <button class="tab-btn" onclick="openTab('black')">📋 Classificação Black</button>
+            <button class="tab-btn" onclick="openTab('tecnica')">🔧 Técnica Amálgama</button>
+            <button class="tab-btn" onclick="openTab('quiz')">✅ Quiz</button>
+        </div>
+
+        <!-- Tab: Conceitos Básicos -->
+        <div id="conceitos" class="tab-content active">
+            <div class="card">
+                <h2>Nomenclatura das Cavidades</h2>
+                
+                <h3>Paredes da Cavidade</h3>
+                <p><strong>Paredes Circundantes:</strong> São os limites laterais da cavidade. Recebem o nome da face do dente correspondente (vestibular, lingual, mesial, distal, cervical).</p>
+                
+                <p style="margin-top: 1rem;"><strong>Paredes de Fundo:</strong></p>
+                <ul style="margin-left: 2rem; margin-top: 0.5rem;">
+                    <li><span class="highlight">Parede Axial:</span> Paralela ao eixo longitudinal do dente</li>
+                    <li><span class="highlight">Parede Pulpar:</span> Perpendicular ao eixo longitudinal do dente</li>
+                </ul>
+
+                <h3>Ângulos das Cavidades</h3>
+                
+                <div class="tip-box">
+                    <strong>💡 Dica:</strong> Os ângulos são formados pela união de paredes e denominados pela combinação dos nomes das mesmas.
+                </div>
+
+                <p><strong>Ângulos Diedros (união de 2 paredes):</strong></p>
+                <ul style="margin-left: 2rem; margin-top: 0.5rem;">
+                    <li><strong>1º Grupo:</strong> Duas paredes circundantes (ex: vestíbulo-gengival, mésio-vestibular)</li>
+                    <li><strong>2º Grupo:</strong> Uma circundante + uma de fundo (ex: linguo-pulpar, gengivo-axial)</li>
+                    <li><strong>3º Grupo:</strong> Duas paredes de fundo (ex: áxio-pulpar)</li>
+                </ul>
+
+                <p style="margin-top: 1rem;"><strong>Ângulos Triedros:</strong> União de 3 paredes (ex: linguo-gengivo-axial, vestíbulo-pulpo-axial)</p>
+
+                <p style="margin-top: 1rem;"><strong>Ângulo Cavo-Superficial:</strong> Limite externo da cavidade, junção das paredes com a superfície externa do dente. Também chamado de <span class="highlight">margem</span>.</p>
+            </div>
+
+            <div class="card">
+                <h2>Princípios do Preparo Cavitário</h2>
+                
+                <div class="important-box">
+                    <strong>⚠️ Importante:</strong> A odontologia moderna prioriza a conservação da estrutura dental, abandonando a extensão preventiva de Black em favor de preparos mais conservadores.
+                </div>
+
+                <h3>Evolução Histórica</h3>
+                <p>Black (1893) propôs a <strong>extensão preventiva</strong>: incluir no preparo todas as áreas susceptíveis ao acúmulo de biofilme (fóssulas, fissuras, pontos de contato).</p>
+                
+                <p style="margin-top: 1rem;">Atualmente: Preparos <strong>conservadores</strong> que preservam estrutura dental sadia, aumentam a resistência do conjunto dente/restauração e protegem o complexo dentino-pulpar.</p>
+
+                <h3>Objetivos do Preparo Moderno</h3>
+                <ul style="margin-left: 2rem; margin-top: 0.5rem;">
+                    <li>Remoção apenas do tecido cariado</li>
+                    <li>Preservação máxima de estrutura sadia</li>
+                    <li>Proteção do complexo dentino-pulpar</li>
+                    <li>Criar condições para retenção da restauração</li>
+                    <li>Resistência adequada do material restaurador</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Tab: Flashcards -->
+        <div id="flashcards" class="tab-content">
+            <div class="card">
+                <h2>Flashcards - Teste seu conhecimento</h2>
+                <p style="margin-bottom: 1.5rem; color: var(--text-muted);">Clique nos cards para ver a resposta</p>
+                
+                <div class="flashcard-container">
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                O que é a parede axial?
+                            </div>
+                            <div class="flashcard-back">
+                                Parede de fundo paralela ao eixo longitudinal do dente
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                O que é a parede pulpar?
+                            </div>
+                            <div class="flashcard-back">
+                                Parede de fundo perpendicular ao eixo longitudinal do dente (soalho da cavidade)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                O que é ângulo cavo-superficial?
+                            </div>
+                            <div class="flashcard-back">
+                                Limite externo da cavidade formado pela junção das paredes com a superfície do dente (margem)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                Exemplo de ângulo diedro do 1º grupo?
+                            </div>
+                            <div class="flashcard-back">
+                                Formado por duas paredes circundantes: vestíbulo-gengival, mésio-vestibular, disto-lingual
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                O que caracteriza o amálgama adesivo?
+                            </div>
+                            <div class="flashcard-back">
+                                Técnica que utiliza sistemas adesivos ou cimento de ionômero de vidro para aumentar a retenção e selar a interface dente-restauração
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                Principal diferença entre preparo de Black e atual?
+                            </div>
+                            <div class="flashcard-back">
+                                Black: extensão preventiva (incluir áreas susceptíveis). Atual: conservação máxima de estrutura dental sadia
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                O que são paredes circundantes?
+                            </div>
+                            <div class="flashcard-back">
+                                Paredes laterais da cavidade que recebem o nome da face correspondente (V, L, M, D, cervical)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                        <div class="flashcard-inner">
+                            <div class="flashcard-front">
+                                Qual o objetivo da condensação do amálgama?
+                            </div>
+                            <div class="flashcard-back">
+                                Adaptar o material às paredes da cavidade, eliminar vazios e remover excesso de mercúrio
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Classificação de Black -->
+        <div id="black" class="tab-content">
+            <div class="card">
+                <h2>Classificação de Black (1908)</h2>
+                <p style="margin-bottom: 1.5rem;">Sistema universal de classificação das cavidades baseado na localização e superfície envolvida</p>
+
+                <div class="classification-grid">
+                    <div class="class-item">
+                        <h4>Classe I</h4>
+                        <p><strong>Localização:</strong> Faces oclusais de molares e pré-molares, faces palatinas de incisivos e caninos superiores, e 2/3 oclusais das faces vestibular e lingual de molares</p>
+                        <p style="margin-top: 0.5rem;"><strong>Característica:</strong> Fóssulas, cicatrículas e defeitos estruturais</p>
+                    </div>
+
+                    <div class="class-item">
+                        <h4>Classe II</h4>
+                        <p><strong>Localização:</strong> Faces proximais (mesial ou distal) de molares e pré-molares</p>
+                        <p style="margin-top: 0.5rem;"><strong>Característica:</strong> Geralmente inclui a face oclusal (preparo composto)</p>
+                    </div>
+
+                    <div class="class-item">
+                        <h4>Classe III</h4>
+                        <p><strong>Localização:</strong> Faces proximais (mesial ou distal) de incisivos e caninos</p>
+                        <p style="margin-top: 0.5rem;"><strong>Característica:</strong> Sem envolvimento do ângulo incisal</p>
+                    </div>
+
+                    <div class="class-item">
+                        <h4>Classe IV</h4>
+                        <p><strong>Localização:</strong> Faces proximais de incisivos e caninos</p>
+                        <p style="margin-top: 0.5rem;"><strong>Característica:</strong> COM envolvimento do ângulo incisal</p>
+                    </div>
+
+                    <div class="class-item">
+                        <h4>Classe V</h4>
+                        <p><strong>Localização:</strong> Terço gengival/cervical das faces vestibular ou lingual de todos os dentes</p>
+                        <p style="margin-top: 0.5rem;"><strong>Característica:</strong> Lesões cervicais, erosão, abrasão</p>
+                    </div>
+
+                    <div class="class-item">
+                        <h4>Classe VI</h4>
+                        <p><strong>Localização:</strong> Bordas incisais de dentes anteriores e pontas de cúspides de dentes posteriores</p>
+                        <p style="margin-top: 0.5rem;"><strong>Característica:</strong> Desgaste por atrição, abrasão</p>
+                    </div>
+                </div>
+
+                <div class="tip-box" style="margin-top: 2rem;">
+                    <strong>💡 Macete de Memorização:</strong>
+                    <ul style="margin-left: 2rem; margin-top: 0.5rem;">
+                        <li><strong>I:</strong> Oclusal/Palatina (fossas e fissuras)</li>
+                        <li><strong>II:</strong> Proximal de posteriores</li>
+                        <li><strong>III:</strong> Proximal de anteriores SEM ângulo</li>
+                        <li><strong>IV:</strong> Proximal de anteriores COM ângulo</li>
+                        <li><strong>V:</strong> Cervical (pescoço do dente)</li>
+                        <li><strong>VI:</strong> Incisal/Cúspide (topo do dente)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Técnica Amálgama -->
+        <div id="tecnica" class="tab-content">
+            <div class="card">
+                <h2>Técnica de Restauração em Amálgama Adesivo</h2>
+                
+                <h3>Materiais Utilizados</h3>
+                <ul style="margin-left: 2rem;">
+                    <li>Amálgama dental</li>
+                    <li>Sistema adesivo OU cimento de ionômero de vidro</li>
+                    <li>Ácido fosfórico 37% (para esmalte) ou poliacrílico 11,5% (para dentina)</li>
+                    <li>Cimento de hidróxido de cálcio (proteção pulpar)</li>
+                    <li>Matriz e cunha</li>
+                </ul>
+
+                <h3>Sequência Clínica</h3>
+                
+                <ol class="step-list">
+                    <li><strong>Preparo Cavitário:</strong> Remoção do tecido cariado com brocas esféricas em baixa rotação. Preparo da forma de contorno com broca #245 ou #330 em alta rotação. Manter preparos conservadores.</li>
+
+                    <li><strong>Limpeza da Cavidade:</strong> Lavar com solução de clorexidina 2% para desinfecção da cavidade.</li>
+
+                    <li><strong>Proteção Pulpar:</strong> Em cavidades profundas, aplicar cimento de hidróxido de cálcio nas áreas próximas à polpa. Pode-se utilizar base de ionômero de vidro.</li>
+
+                    <li><strong>Condicionamento:</strong> 
+                        <ul style="margin-left: 2rem; margin-top: 0.5rem;">
+                            <li>Esmalte: ácido fosfórico 37% por 30 segundos</li>
+                            <li>Dentina: ácido poliacrílico 11,5% por 10 segundos (se usar ionômero)</li>
+                        </ul>
+                    </li>
+
+                    <li><strong>Aplicação do Sistema Adesivo:</strong>
+                        <ul style="margin-left: 2rem; margin-top: 0.5rem;">
+                            <li><strong>Opção 1:</strong> Sistema adesivo convencional (Primer + Adesivo)</li>
+                            <li><strong>Opção 2:</strong> Cimento de ionômero de vidro convencional ou modificado por resina em fina camada (aspecto brilhante)</li>
+                        </ul>
+                    </li>
+
+                    <li><strong>Instalação de Matriz:</strong> Matriz individual rebitada ou matriz de Barton para cavidades proximais. Posicionar cunha de madeira.</li>
+
+                    <li><strong>Condensação do Amálgama:</strong> 
+                        <ul style="margin-left: 2rem; margin-top: 0.5rem;">
+                            <li>Inserir porções pequenas de amálgama</li>
+                            <li>Condensar firmemente contra as paredes</li>
+                            <li>Remover excesso de mercúrio que aflora</li>
+                            <li>Limpar condensador periodicamente com gaze</li>
+                        </ul>
+                    </li>
+
+                    <li><strong>Remoção de Excessos:</strong> Brunir e remover excessos com instrumentos apropriados.</li>
+
+                    <li><strong>Escultura Anatômica:</strong> Reproduzir a anatomia oclusal (sulcos, cristas, cúspides) com esculpidores.</li>
+
+                    <li><strong>Acabamento e Polimento:</strong> Realizar em sessão posterior (24-48h). Usar brocas multilaminadas, taças de borracha e pasta para polimento.</li>
+                </ol>
+
+                <div class="important-box">
+                    <strong>⚠️ Pontos Críticos:</strong>
+                    <ul style="margin-left: 2rem; margin-top: 0.5rem;">
+                        <li>Condensação deve ser imediata após aplicação do adesivo/ionômero</li>
+                        <li>Condensadores devem ser limpos frequentemente para evitar aderência</li>
+                        <li>O ionômero deve estar com aspecto brilhante (fase de presa inicial)</li>
+                        <li>Não manipular excessivamente o amálgama para evitar cristalização prematura</li>
+                    </ul>
+                </div>
+
+                <div class="tip-box">
+                    <strong>💡 Vantagens do Amálgama Adesivo:</strong>
+                    <ul style="margin-left: 2rem; margin-top: 0.5rem;">
+                        <li>Maior retenção em cavidades amplas</li>
+                        <li>Melhor selamento marginal</li>
+                        <li>Redução da microinfiltração</li>
+                        <li>Possibilidade de preparos mais conservadores</li>
+                        <li>Proteção do complexo dentino-pulpar</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Quiz -->
+        <div id="quiz" class="tab-content">
+            <div class="card">
+                <h2>Quiz de Conhecimento</h2>
+                <p style="margin-bottom: 1.5rem; color: var(--text-muted);">Teste seus conhecimentos sobre preparo cavitário e amálgama</p>
+
+                <div id="quiz-container">
+                    <!-- Questão 1 -->
+                    <div class="quiz-question">
+                        <h4>1. Qual parede da cavidade é perpendicular ao eixo longitudinal do dente?</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" data-correct="false" onclick="checkAnswer(this)">a) Parede axial</div>
+                            <div class="quiz-option" data-correct="true" onclick="checkAnswer(this)">b) Parede pulpar</div>
+                            <div class="quiz-option" data-correct="false" onclick="checkAnswer(this)">c) Parede vestibular</div>
+                            <div class="quiz-option" data-correct="false" onclick="checkAnswer(this)">d) Parede cervical</div>
+                        </div>
+                    </div>
+
+                    <!-- Questão 2 -->
+                    <div class="quiz-question">
+                        <h4>2. Uma cavidade na face oclusal de um molar é classificada como:</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" data-correct="true" onclick="checkAnswer(this)">a) Classe I</div>
+                            <div class="quiz-option" data-correct="false" onclick="checkAnswer(this)">b) Classe II</div>
+                            <div class="quiz-option" data-correct="false" onclick="checkAnswer(this)">c) Classe III</div>
+                            <div class="quiz-option" data-correct="false" onclick="checkAnswer(this)">d) Classe V</div>
+                        </div>
+                    </div>
+
+                    <!-- Questão 3 -->
+                    <div class="quiz-question">
+                        <h4>3. O ângulo cavo-superficial é:</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" data-correct="false" onclick="checkAnswer(this)">a) A união de três paredes</div>
+                            <div class="quiz-option" data-correct="true" onclick="checkAnswer(this)">b) O limite externo da cavidade (margem)</div>
+                            <div class="quiz-option" data-correct="false" onclick="checkAnswer(this)">c) A parede mais profunda da cavidade</div>
+                            <div class="quiz-option" data-correct="false" onclick="checkAnswer(this)">d) A união de duas paredes circundantes</div>
+                        </div>
+                    </div>
+
+                    <!-- Questão 4 -->
+                    <div class="quiz-question">
+                        <h4>4. Na técnica do amálgama adesivo com ionômero, o aspecto ideal do cimento no momento da condensação é:</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" data-correct="false" onclick="checkAnswer(this)">a) Opaco e seco</div>
+                            <div class="quiz-option" data-correct="true" onclick="checkAnswer(this)">b) Brilhante (fase inicial de presa)</div>
+                            <div class="quiz-option" data-correct="false" onclick="checkAnswer(this)">c) Completamente polimerizado</div>
+                            <div class="quiz-option" data-correct="false" onclick="checkAnswer(this)">d) Fluido e escorrendo</div>
+                        </div>
+                    </div>
+
+                    <!-- Questão 5 -->
+                    <div class="quiz-question">
+                        <h4>5. Uma cavidade na face mesial de um canino COM envolvimento do ângulo incisal é:</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" data-correct="false" onclick="checkAnswer(this)">a) Classe II</div>
+                            <div class="quiz-option" data-correct="false" onclick="checkAnswer(this)">b) Classe III</div>
+                            <div class="quiz-option" data-correct="true" onclick="checkAnswer(this)">c) Classe IV</div>
+                            <div class="quiz-option" data-correct="false" onclick="checkAnswer(this)">d) Classe VI</div>
+                        </div>
+                    </div>
+
+                    <!-- Questão 6 -->
+                    <div class="quiz-question">
+                        <h4>6. O principal objetivo da condensação do amálgama é:</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" data-correct="false" onclick="checkAnswer(this)">a) Acelerar a presa do material</div>
+                            <div class="quiz-option" data-correct="true" onclick="checkAnswer(this)">b) Adaptar o material, eliminar vazios e remover excesso de mercúrio</div>
+                            <div class="quiz-option" data-correct="false" onclick="checkAnswer(this)">c) Polir a superfície do amálgama</div>
+                            <div class="quiz-option" data-correct="false" onclick="checkAnswer(this)">d) Endurecer o material</div>
+                        </div>
+                    </div>
+
+                    <!-- Questão 7 -->
+                    <div class="quiz-question">
+                        <h4>7. O tempo de condicionamento do esmalte com ácido fosfórico 37% é:</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" data-correct="false" onclick="checkAnswer(this)">a) 10 segundos</div>
+                            <div class="quiz-option" data-correct="false" onclick="checkAnswer(this)">b) 15 segundos</div>
+                            <div class="quiz-option" data-correct="true" onclick="checkAnswer(this)">c) 30 segundos</div>
+                            <div class="quiz-option" data-correct="false" onclick="checkAnswer(this)">d) 60 segundos</div>
+                        </div>
+                    </div>
+
+                    <!-- Questão 8 -->
+                    <div class="quiz-question">
+                        <h4>8. Um exemplo de ângulo diedro do 1º grupo é:</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" data-correct="false" onclick="checkAnswer(this)">a) Áxio-pulpar</div>
+                            <div class="quiz-option" data-correct="false" onclick="checkAnswer(this)">b) Linguo-pulpar</div>
+                            <div class="quiz-option" data-correct="true" onclick="checkAnswer(this)">c) Vestíbulo-gengival</div>
+                            <div class="quiz-option" data-correct="false" onclick="checkAnswer(this)">d) Gengivo-axial</div>
+                        </div>
+                    </div>
+
+                    <!-- Questão 9 -->
+                    <div class="quiz-question">
+                        <h4>9. A filosofia atual de preparo cavitário prioriza:</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" data-correct="false" onclick="checkAnswer(this)">a) Extensão preventiva máxima</div>
+                            <div class="quiz-option" data-correct="true" onclick="checkAnswer(this)">b) Conservação máxima de estrutura dental sadia</div>
+                            <div class="quiz-option" data-correct="false" onclick="checkAnswer(this)">c) Remoção de todas as fóssulas e fissuras</div>
+                            <div class="quiz-option" data-correct="false" onclick="checkAnswer(this)">d) Preparos amplos para melhor retenção</div>
+                        </div>
+                    </div>
+
+                    <!-- Questão 10 -->
+                    <div class="quiz-question">
+                        <h4>10. Quando deve ser realizado o acabamento e polimento do amálgama?</h4>
+                        <div class="quiz-options">
+                            <div class="quiz-option" data-correct="false" onclick="checkAnswer(this)">a) Imediatamente após a condensação</div>
+                            <div class="quiz-option" data-correct="false" onclick="checkAnswer(this)">b) 1 hora após a restauração</div>
+                            <div class="quiz-option" data-correct="true" onclick="checkAnswer(this)">c) Em sessão posterior (24-48h)</div>
+                            <div class="quiz-option" data-correct="false" onclick="checkAnswer(this)">d) Após 1 semana</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="quiz-score" style="display: none;"></div>
+                <button class="reset-quiz" onclick="resetQuiz()" style="display: none;">Refazer Quiz</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Material de estudos baseado em: Dentística - Filosofia, Conceitos e Prática Clínica (Busato et al.)</p>
+        <p style="margin-top: 0.5rem;">Boa sorte na sua prova! 🦷✨</p>
+    </div>
+
+    <script>
+        function openTab(tabName) {
+            const contents = document.querySelectorAll('.tab-content');
+            const buttons = document.querySelectorAll('.tab-btn');
+            
+            contents.forEach(content => content.classList.remove('active'));
+            buttons.forEach(button => button.classList.remove('active'));
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        let correctAnswers = 0;
+        let totalQuestions = 10;
+        let answeredQuestions = 0;
+
+        function checkAnswer(element) {
+            const options = element.parentElement.querySelectorAll('.quiz-option');
+            const isCorrect = element.dataset.correct === 'true';
+            
+            // Evitar responder duas vezes
+            if (element.parentElement.dataset.answered) return;
+            element.parentElement.dataset.answered = 'true';
+            answeredQuestions++;
+            
+            options.forEach(opt => {
+                opt.style.pointerEvents = 'none';
+                if (opt.dataset.correct === 'true') {
+                    opt.classList.add('correct');
+                } else if (opt === element && !isCorrect) {
+                    opt.classList.add('incorrect');
+                }
+            });
+            
+            if (isCorrect) {
+                correctAnswers++;
+            }
+            
+            // Mostrar score quando todas as questões forem respondidas
+            if (answeredQuestions === totalQuestions) {
+                showScore();
+            }
+        }
+
+        function showScore() {
+            const percentage = (correctAnswers / totalQuestions * 100).toFixed(0);
+            const scoreDiv = document.getElementById('quiz-score');
+            const resetBtn = document.querySelector('.reset-quiz');
+            
+            let message = '';
+            if (percentage >= 90) {
+                message = '🏆 Excelente! Você domina o conteúdo!';
+            } else if (percentage >= 70) {
+                message = '👏 Muito bom! Continue estudando!';
+            } else if (percentage >= 50) {
+                message = '📚 Bom esforço! Revise alguns conceitos.';
+            } else {
+                message = '💪 Continue estudando! Você consegue!';
+            }
+            
+            scoreDiv.innerHTML = `
+                <div>${message}</div>
+                <div style="font-size: 2rem; margin-top: 0.5rem;">${correctAnswers}/${totalQuestions} (${percentage}%)</div>
+            `;
+            scoreDiv.style.display = 'block';
+            resetBtn.style.display = 'block';
+        }
+
+        function resetQuiz() {
+            correctAnswers = 0;
+            answeredQuestions = 0;
+            
+            const questions = document.querySelectorAll('.quiz-question');
+            questions.forEach(question => {
+                const options = question.querySelectorAll('.quiz-option');
+                question.querySelector('.quiz-options').removeAttribute('data-answered');
+                options.forEach(opt => {
+                    opt.classList.remove('correct', 'incorrect');
+                    opt.style.pointerEvents = 'auto';
+                });
+            });
+            
+            document.getElementById('quiz-score').style.display = 'none';
+            document.querySelector('.reset-quiz').style.display = 'none';
+            
+            // Scroll para o topo do quiz
+            document.getElementById('quiz-container').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
